@@ -19,6 +19,7 @@ export default function Page() {
   const [editing, setEditing] = useState(null); // {id,title,body}
   const [saving, setSaving] = useState(false);
   const [theme, setTheme] = useState('light');
+  const [local, setLocal] = useState(false); // 서버 저장소 미설정 시 기기 저장 모드
   const timer = useRef(null);
 
   useEffect(() => {
@@ -43,7 +44,16 @@ export default function Page() {
       setErr(j.error || '불러오기 실패');
       return setStage('app');
     }
-    setNotes(j.notes || []);
+    if (j.mode === 'local') {
+      setLocal(true);
+      try {
+        setNotes(JSON.parse(localStorage.getItem('memo-notes') || '[]'));
+      } catch {
+        setNotes([]);
+      }
+    } else {
+      setNotes(j.notes || []);
+    }
     setStage('app');
   }
 
@@ -71,6 +81,10 @@ export default function Page() {
   // 목록을 통째로 저장 (연타 방지용 디바운스)
   function persist(next) {
     setNotes(next);
+    if (local) {
+      localStorage.setItem('memo-notes', JSON.stringify(next));
+      return;
+    }
     setSaving(true);
     clearTimeout(timer.current);
     timer.current = setTimeout(async () => {
@@ -154,7 +168,7 @@ export default function Page() {
   return (
     <div className="wrap">
       <header className="bar">
-        <h1>메모</h1>
+        <h1>메모{local ? ' (이 기기)' : ''}</h1>
         {saving && <span className="saving">저장 중…</span>}
         <button className="btn icon" onClick={toggleTheme} title="테마">
           {theme === 'dark' ? '☀️' : '🌙'}

@@ -6,8 +6,12 @@ export const dynamic = 'force-dynamic';
 
 const deny = () => NextResponse.json({ error: 'unauthorized' }, { status: 401 });
 
+const hasStore = () =>
+  !!(process.env.GH_OWNER && process.env.GH_REPO && process.env.GH_TOKEN);
+
 export async function GET() {
   if (!isAuthed()) return deny();
+  if (!hasStore()) return NextResponse.json({ mode: 'local', notes: [] });
   try {
     const { notes } = await readNotes();
     return NextResponse.json({ notes });
@@ -19,6 +23,7 @@ export async function GET() {
 // 전체 목록을 통째로 저장 (작성/수정/삭제/핀 모두 여기로)
 export async function PUT(req) {
   if (!isAuthed()) return deny();
+  if (!hasStore()) return NextResponse.json({ ok: true, mode: 'local' });
   try {
     const body = await req.json();
     const incoming = Array.isArray(body.notes) ? body.notes : [];
