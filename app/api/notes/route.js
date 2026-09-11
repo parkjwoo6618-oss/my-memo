@@ -22,8 +22,7 @@ export async function PUT(req) {
   try {
     const body = await req.json();
     const incoming = Array.isArray(body.notes) ? body.notes : [];
-    const { sha } = await readNotes();
-    await writeNotes(incoming, sha);
+    await writeNotes(incoming);
     return NextResponse.json({ ok: true, notes: incoming });
   } catch (e) {
     return NextResponse.json({ error: String(e.message || e) }, { status: 500 });
