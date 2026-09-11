@@ -1,18 +1,18 @@
 # 메모 (my-memo)
 
-비밀번호 하나로 들어가는 개인 메모 웹앱. 서버는 Vercel, 데이터는 Supabase(`notes` 테이블).
+비밀번호 하나로 들어가는 개인 메모 웹앱. 서버는 Vercel, 데이터는 이 저장소의 `data/notes.json`
+(별도 DB 불필요). 모바일·데스크톱에서 같은 메모가 보인다.
 
-## 준비
-
-1. Supabase 프로젝트 생성 → SQL Editor 에서 `supabase.sql` 실행
-2. 아래 환경변수를 Vercel 에 설정
+## 환경변수 (Vercel)
 
 | 키 | 설명 |
 | --- | --- |
 | `APP_PASSWORD` | 로그인 비밀번호 |
-| `SUPABASE_URL` | `https://xxxx.supabase.co` |
-| `SUPABASE_SERVICE_ROLE_KEY` | 서버 전용 service_role 키 (절대 클라이언트 노출 금지) |
-| `SUPABASE_TABLE` | 기본값 `notes` |
+| `GH_TOKEN` | 이 저장소 Contents 읽기/쓰기 권한 PAT |
+| `GH_OWNER` | 저장소 소유자 |
+| `GH_REPO` | 저장소 이름 |
+| `GH_BRANCH` | 기본값 `main` |
+| `GH_PATH` | 기본값 `data/notes.json` |
 
 ## 로컬 실행
 
