@@ -6,8 +6,7 @@ export const dynamic = 'force-dynamic';
 
 const deny = () => NextResponse.json({ error: 'unauthorized' }, { status: 401 });
 
-const hasStore = () =>
-  !!(process.env.GH_OWNER && process.env.GH_REPO && process.env.GH_TOKEN);
+const hasStore = () => !!process.env.DATABASE_URL;
 
 export async function GET() {
   if (!isAuthed()) return deny();
